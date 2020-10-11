@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GravityFormsAdapterTestingModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="tblGravityEntries">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="None" />
+          <Property Name="form_id" Type="int" Nullable="false" />
+          <Property Name="created_by" Type="int" Nullable="false" />
+          <Property Name="date_created" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="is_starred" Type="bit" Nullable="false" />
+          <Property Name="is_read" Type="bit" Nullable="false" />
+          <Property Name="ip" Type="nvarchar(max)" />
+          <Property Name="source_url" Type="nvarchar(max)" />
+          <Property Name="post_id" Type="int" />
+          <Property Name="user_agent" Type="nvarchar(max)" />
+          <Property Name="status" Type="nvarchar(max)" />
+          <Property Name="currency" Type="nvarchar(max)" />
+          <Property Name="payment_status" Type="nvarchar(max)" />
+          <Property Name="payment_date" Type="nvarchar(max)" />
+          <Property Name="payment_amount" Type="decimal" Precision="18" Scale="3" />
+          <Property Name="transaction_id" Type="nvarchar(max)" />
+          <Property Name="is_fulfilled" Type="bit" />
+          <Property Name="transaction_type" Type="int" />
+        </EntityType>
+        <EntityType Name="tblGravityEntryValues">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="entry_id" Type="int" Nullable="false" />
+          <Property Name="entryKey" Type="nvarchar(max)" />
+          <Property Name="entrySubKey" Type="nvarchar(max)" />
+          <Property Name="entryValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="tblGravityFieldInputs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="field_id" Type="int" Nullable="false" />
+          <Property Name="label" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblGravityFields">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="form_id" Type="int" Nullable="false" />
+          <Property Name="type" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="label" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblGravityForms">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="None" />
+          <Property Name="title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="description" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityContainer Name="GravityFormsAdapterTestingModelStoreContainer">
+          <EntitySet Name="tblGravityEntries" EntityType="Self.tblGravityEntries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblGravityEntryValues" EntityType="Self.tblGravityEntryValues" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblGravityFieldInputs" EntityType="Self.tblGravityFieldInputs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblGravityFields" EntityType="Self.tblGravityFields" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblGravityForms" EntityType="Self.tblGravityForms" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GravityFormsSQLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="tblGravityEntry">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="form_id" Type="Int32" Nullable="false" />
+          <Property Name="created_by" Type="Int32" Nullable="false" />
+          <Property Name="date_created" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="is_starred" Type="Boolean" Nullable="false" />
+          <Property Name="is_read" Type="Boolean" Nullable="false" />
+          <Property Name="ip" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="source_url" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="post_id" Type="Int32" />
+          <Property Name="user_agent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="currency" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="payment_status" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="payment_date" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="payment_amount" Type="Decimal" Precision="18" Scale="3" />
+          <Property Name="transaction_id" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="is_fulfilled" Type="Boolean" />
+          <Property Name="transaction_type" Type="Int32" />
+        </EntityType>
+        <EntityType Name="tblGravityEntryValue">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="entry_id" Type="Int32" Nullable="false" />
+          <Property Name="entryKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="entrySubKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="entryValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblGravityFieldInput">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="label" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="field_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblGravityField">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="label" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="form_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblGravityForm">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="GravityFormsSQLEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="tblGravityEntries" EntityType="Self.tblGravityEntry" />
+          <EntitySet Name="tblGravityEntryValues" EntityType="Self.tblGravityEntryValue" />
+          <EntitySet Name="tblGravityFieldInputs" EntityType="Self.tblGravityFieldInput" />
+          <EntitySet Name="tblGravityFields" EntityType="Self.tblGravityField" />
+          <EntitySet Name="tblGravityForms" EntityType="Self.tblGravityForm" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GravityFormsAdapterTestingModelStoreContainer" CdmEntityContainer="GravityFormsSQLEntities">
+          <EntitySetMapping Name="tblGravityEntries">
+            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityEntry">
+              <MappingFragment StoreEntitySet="tblGravityEntries">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="form_id" ColumnName="form_id" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="date_created" ColumnName="date_created" />
+                <ScalarProperty Name="is_starred" ColumnName="is_starred" />
+                <ScalarProperty Name="is_read" ColumnName="is_read" />
+                <ScalarProperty Name="ip" ColumnName="ip" />
+                <ScalarProperty Name="source_url" ColumnName="source_url" />
+                <ScalarProperty Name="post_id" ColumnName="post_id" />
+                <ScalarProperty Name="user_agent" ColumnName="user_agent" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="currency" ColumnName="currency" />
+                <ScalarProperty Name="payment_status" ColumnName="payment_status" />
+                <ScalarProperty Name="payment_date" ColumnName="payment_date" />
+                <ScalarProperty Name="payment_amount" ColumnName="payment_amount" />
+                <ScalarProperty Name="transaction_id" ColumnName="transaction_id" />
+                <ScalarProperty Name="is_fulfilled" ColumnName="is_fulfilled" />
+                <ScalarProperty Name="transaction_type" ColumnName="transaction_type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityEntryValues">
+            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityEntryValue">
+              <MappingFragment StoreEntitySet="tblGravityEntryValues">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="entry_id" ColumnName="entry_id" />
+                <ScalarProperty Name="entryKey" ColumnName="entryKey" />
+                <ScalarProperty Name="entrySubKey" ColumnName="entrySubKey" />
+                <ScalarProperty Name="entryValue" ColumnName="entryValue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityFieldInputs">
+            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityFieldInput">
+              <MappingFragment StoreEntitySet="tblGravityFieldInputs">
+                <ScalarProperty Name="field_id" ColumnName="field_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityFields">
+            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityField">
+              <MappingFragment StoreEntitySet="tblGravityFields">
+                <ScalarProperty Name="form_id" ColumnName="form_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityForms">
+            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityForm">
+              <MappingFragment StoreEntitySet="tblGravityForms">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
