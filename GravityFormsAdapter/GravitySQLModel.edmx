@@ -9,7 +9,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="None" />
+          <Property Name="id" Type="int" Nullable="false" />
           <Property Name="form_id" Type="int" Nullable="false" />
           <Property Name="created_by" Type="int" Nullable="false" />
           <Property Name="date_created" Type="nvarchar(max)" Nullable="false" />
@@ -53,6 +53,7 @@
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="form_id" Type="int" Nullable="false" />
+          <Property Name="field_id" Type="nvarchar(max)" Nullable="false" />
           <Property Name="type" Type="nvarchar(max)" Nullable="false" />
           <Property Name="label" Type="nvarchar(max)" Nullable="false" />
           <Property Name="description" Type="nvarchar(max)" Nullable="false" />
@@ -61,7 +62,7 @@
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" StoreGeneratedPattern="None" />
+          <Property Name="id" Type="int" Nullable="false" />
           <Property Name="title" Type="nvarchar(max)" Nullable="false" />
           <Property Name="description" Type="nvarchar(max)" />
         </EntityType>
@@ -75,7 +76,7 @@
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="GravityFormsSQLModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="GravityFormsAdapter" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="tblGravityEntry">
           <Key>
             <PropertyRef Name="id" />
@@ -109,25 +110,6 @@
           <Property Name="entrySubKey" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="entryValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="tblGravityFieldInput">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="label" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="field_id" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="tblGravityField">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="type" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="label" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="form_id" Type="Int32" Nullable="false" />
-        </EntityType>
         <EntityType Name="tblGravityForm">
           <Key>
             <PropertyRef Name="id" />
@@ -139,10 +121,30 @@
         <EntityContainer Name="GravityFormsSQLEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="tblGravityEntries" EntityType="Self.tblGravityEntry" />
           <EntitySet Name="tblGravityEntryValues" EntityType="Self.tblGravityEntryValue" />
-          <EntitySet Name="tblGravityFieldInputs" EntityType="Self.tblGravityFieldInput" />
-          <EntitySet Name="tblGravityFields" EntityType="Self.tblGravityField" />
           <EntitySet Name="tblGravityForms" EntityType="Self.tblGravityForm" />
+          <EntitySet Name="tblGravityFieldInputs" EntityType="GravityFormsAdapter.tblGravityFieldInput" />
+          <EntitySet Name="tblGravityFields" EntityType="GravityFormsAdapter.tblGravityField" />
         </EntityContainer>
+        <EntityType Name="tblGravityFieldInput">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="field_id" Type="Int32" Nullable="false" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblGravityField">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="form_id" Type="Int32" Nullable="false" />
+          <Property Name="field_id" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="label" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -150,7 +152,7 @@
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="GravityFormsAdapterTestingModelStoreContainer" CdmEntityContainer="GravityFormsSQLEntities">
           <EntitySetMapping Name="tblGravityEntries">
-            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityEntry">
+            <EntityTypeMapping TypeName="GravityFormsAdapter.tblGravityEntry">
               <MappingFragment StoreEntitySet="tblGravityEntries">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="form_id" ColumnName="form_id" />
@@ -174,7 +176,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tblGravityEntryValues">
-            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityEntryValue">
+            <EntityTypeMapping TypeName="GravityFormsAdapter.tblGravityEntryValue">
               <MappingFragment StoreEntitySet="tblGravityEntryValues">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="entry_id" ColumnName="entry_id" />
@@ -184,33 +186,34 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="tblGravityFieldInputs">
-            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityFieldInput">
-              <MappingFragment StoreEntitySet="tblGravityFieldInputs">
-                <ScalarProperty Name="field_id" ColumnName="field_id" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="label" ColumnName="label" />
-                <ScalarProperty Name="name" ColumnName="name" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tblGravityFields">
-            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityField">
-              <MappingFragment StoreEntitySet="tblGravityFields">
-                <ScalarProperty Name="form_id" ColumnName="form_id" />
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="type" ColumnName="type" />
-                <ScalarProperty Name="label" ColumnName="label" />
-                <ScalarProperty Name="description" ColumnName="description" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="tblGravityForms">
-            <EntityTypeMapping TypeName="GravityFormsSQLModel.tblGravityForm">
+            <EntityTypeMapping TypeName="GravityFormsAdapter.tblGravityForm">
               <MappingFragment StoreEntitySet="tblGravityForms">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="description" ColumnName="description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityFieldInputs">
+            <EntityTypeMapping TypeName="GravityFormsAdapter.tblGravityFieldInput">
+              <MappingFragment StoreEntitySet="tblGravityFieldInputs">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="field_id" ColumnName="field_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityFields">
+            <EntityTypeMapping TypeName="GravityFormsAdapter.tblGravityField">
+              <MappingFragment StoreEntitySet="tblGravityFields">
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="label" ColumnName="label" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="field_id" ColumnName="field_id" />
+                <ScalarProperty Name="form_id" ColumnName="form_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

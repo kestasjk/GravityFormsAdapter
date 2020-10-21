@@ -65,6 +65,7 @@ GO
 CREATE TABLE [dbo].[tblGravityFields](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[form_id] [int] NOT NULL,
+	[field_id] [nvarchar](max) NOT NULL,
 	[type] [nvarchar](max) NOT NULL,
 	[label] [nvarchar](max) NOT NULL,
 	[description] [nvarchar](max) NOT NULL,

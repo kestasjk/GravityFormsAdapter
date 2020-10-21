@@ -32,6 +32,7 @@ namespace GravityFormsAdapter
                     var fieldRec = db.tblGravityFields.Create();
 
                     fieldRec.form_id = form.id;
+                    fieldRec.field_id = field.id;
                     fieldRec.label = field.label;
                     fieldRec.type = field.type;
                     fieldRec.description = field.description;

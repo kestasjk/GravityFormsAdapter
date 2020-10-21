@@ -15,8 +15,8 @@ namespace GravityFormsAdapter
     public partial class tblGravityFieldInput
     {
         public int id { get; set; }
+        public int field_id { get; set; }
         public string label { get; set; }
         public string name { get; set; }
-        public int field_id { get; set; }
     }
 }

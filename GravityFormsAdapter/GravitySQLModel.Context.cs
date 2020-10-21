@@ -27,8 +27,8 @@ namespace GravityFormsAdapter
     
         public virtual DbSet<tblGravityEntry> tblGravityEntries { get; set; }
         public virtual DbSet<tblGravityEntryValue> tblGravityEntryValues { get; set; }
+        public virtual DbSet<tblGravityForm> tblGravityForms { get; set; }
         public virtual DbSet<tblGravityFieldInput> tblGravityFieldInputs { get; set; }
         public virtual DbSet<tblGravityField> tblGravityFields { get; set; }
-        public virtual DbSet<tblGravityForm> tblGravityForms { get; set; }
     }
 }
