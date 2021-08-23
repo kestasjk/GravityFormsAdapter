@@ -10,6 +10,11 @@ namespace GravityFormsAdapter
 {
     public class GravityDataStructures
     {
+        public class APIV1Envelope<T> where T: class
+        {
+            public int status { get; set; }
+            public Dictionary<string, T> response { get; set; }
+        }
         [DataContract]
         public class GravityForm
         {// http://jigsaw.kuliukas.com/wp-json/gf/v2/forms
@@ -164,7 +169,7 @@ namespace GravityFormsAdapter
 
                 payment_date = jsonObject.ContainsKey("payment_date") ? jsonObject["payment_date"]?.ToString() : null;
 
-                payment_amount = jsonObject.ContainsKey("payment_amount") && jsonObject["payment_amount"] != null ? Int32.Parse(jsonObject["payment_amount"].ToString()) : -1;
+                payment_amount = jsonObject.ContainsKey("payment_amount") && jsonObject["payment_amount"] != null ? Decimal.Parse(jsonObject["payment_amount"].ToString()) : -1;
 
                 transaction_id = jsonObject.ContainsKey("transaction_id") ? jsonObject["transaction_id"]?.ToString() : null;
 

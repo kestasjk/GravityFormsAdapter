@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -109,6 +110,33 @@ namespace GravityFormsAdapter
         {
             public PageNotFoundException() : base("404 error, page not found") { }
         }
+
+        public class GravityFormsV1Signer
+        {
+
+            public static string UrlEncodeTo64(byte[] bytesToEncode)
+            {
+                string returnValue
+                    = System.Convert.ToBase64String(bytesToEncode);
+
+                return HttpUtility.UrlEncode(returnValue);
+            }
+
+            public static string Sign(string value, string key)
+            {
+                using (var hmac = new System.Security.Cryptography.HMACSHA1(Encoding.ASCII.GetBytes(key)))
+                {
+                    return UrlEncodeTo64(hmac.ComputeHash(Encoding.ASCII.GetBytes(value)));
+                }
+            }
+
+            public static int UtcTimestamp(TimeSpan timeSpanToAdd)
+            {
+                TimeSpan ts = (DateTime.UtcNow.Add(timeSpanToAdd) - new DateTime(1970, 1, 1, 0, 0, 0));
+                int expires_int = (int)ts.TotalSeconds;
+                return expires_int;
+            }
+        }
         private async Task<string> GetJSON(string apiPath)
         {
             var requestUrl = config.RootURL + apiPath;
@@ -135,26 +163,60 @@ namespace GravityFormsAdapter
 
             
             if( true ) {
-                Log("Preparing OAuth credentials");
 
-                OAuth.OAuthRequest c = OAuth.OAuthRequest.ForRequestToken(config.ConsumerKey, config.ConsumerSecret);
+                if( true)
+                {
 
-                c.RequestUrl = requestUrl;
-                var oAuthParams = c.GetAuthorizationQuery();
+                    Log("Preparing v1 credentials:");
+                    string publicKey = config.ConsumerKey;
+                    string privateKey = config.ConsumerSecret;
+                    string method = "GET";
+                    string route = "forms";
+                    string expires = GravityFormsV1Signer.UtcTimestamp(new TimeSpan(0, 1, 0)).ToString();
+                    string stringToSign = string.Format("{0}:{1}:{2}:{3}", publicKey, method, route, expires);
 
-                Log("OAuth parameters:");
-                Log(oAuthParams);
 
-                Log("Final URL:");
-                var authenticatedURL = requestUrl + "?" + oAuthParams;
-                Log(authenticatedURL);
+                    var sig = GravityFormsV1Signer.Sign(stringToSign, privateKey);
+                    Log("Signature:" + sig);
 
-                req.RequestUri = new Uri(authenticatedURL);
+                    var signedURL = requestUrl + "?api_key=" + publicKey + "&signature=" + sig + "&expires=" + expires;
 
-                // The below didn't work on the first try but the above does, so stick with the above..
-                // Alternatively: 
-                //req.Headers.Remove("Authorization");
-                //req.Headers.Add("Authorization", c.GetAuthorizationHeader());
+                    Log("URL:" + signedURL);
+
+                    req.RequestUri = new Uri(signedURL);
+                }    
+                else if (true)
+                {
+                    Log("Preparing Basic credentials");
+
+                    // The below didn't work on the first try but the below does, so stick with the below..
+                    req.Headers.Remove("Authorization");
+                    //var authHeader = c.GetAuthorizationHeader();
+                    var authBasic = Convert.ToBase64String(Encoding.UTF8.GetBytes(config.ConsumerKey + ":" + config.ConsumerSecret));
+
+                    req.Headers.Add("Authorization", "Basic " + authBasic);
+
+                    req.RequestUri = new Uri(requestUrl);
+                }
+                else
+                {
+                    Log("Preparing OAuth credentials");
+
+                    OAuth.OAuthRequest c = OAuth.OAuthRequest.ForRequestToken(config.ConsumerKey, config.ConsumerSecret);
+
+                    c.RequestUrl = requestUrl;
+                    var oAuthParams = c.GetAuthorizationQuery();
+
+                    Log("OAuth parameters:");
+                    Log(oAuthParams);
+
+                    Log("Final URL:");
+                    var authenticatedURL = requestUrl + "?" + oAuthParams;
+                    Log(authenticatedURL);
+
+                    req.RequestUri = new Uri(requestUrl);
+
+                }
             }
             else
             {
@@ -180,6 +242,9 @@ namespace GravityFormsAdapter
                 }
 
                 var jsonData = await result.Content.ReadAsStringAsync();
+
+                jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "^\\{\"status\":200,\"response\":", "");
+                jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "\\}$", "");
 
                 return jsonData;
                 Log("Downloaded");
@@ -226,8 +291,9 @@ namespace GravityFormsAdapter
 
                 progressBar.Value = 20;
                 lblStatus.Content = "Parsing form headers";
-                var formHeaders = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, GravityDataStructures.GravityForm>>(formsJson);
-
+                var formHeaders = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string,GravityDataStructures.GravityForm>>(formsJson);
+                //var formHeaders= envelope.response;
+                
                 progressBar.Value = 25;
                 lblStatus.Content = "Fetching form details";
                 foreach (var f in formHeaders.Where(frm => validForms.Count == 0 || validForms.Contains(frm.Key)))
