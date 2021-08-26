@@ -23,6 +23,7 @@ namespace GravityFormsAdapter
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
     public partial class MainWindow : Window
     {
         public MainWindow()
@@ -68,6 +69,9 @@ namespace GravityFormsAdapter
             chkIgnoreSSL.IsChecked = (config.IgnoreCertificateErrors);
             chkFetchForms.IsChecked = (config.FetchForms);
             chkSaveToSQL.IsChecked = (config.SaveToSQL);
+            cboOptionVersion1.IsSelected = config.APIType == Config.APITypes.Version1;
+            cboOptionVersion2Basic.IsSelected = config.APIType == Config.APITypes.Version2Basic;
+            cboOptionVersion2OAuth1.IsSelected = config.APIType == Config.APITypes.Version2OAuth1;
         }
         private void SaveConfig()
         {
@@ -84,6 +88,12 @@ namespace GravityFormsAdapter
             config.IgnoreCertificateErrors = chkIgnoreSSL.IsChecked ?? false;
             config.SaveToSQL = chkSaveToSQL.IsChecked ?? false;
             config.FetchForms = chkFetchForms.IsChecked ?? false;
+            if (cboOptionVersion1.IsSelected)
+                config.APIType = Config.APITypes.Version1;
+            else if (cboOptionVersion2Basic.IsSelected)
+                config.APIType = Config.APITypes.Version2Basic;
+            else
+                config.APIType = Config.APITypes.Version2OAuth1;
 
             config.Save();
         }
@@ -137,9 +147,17 @@ namespace GravityFormsAdapter
                 return expires_int;
             }
         }
-        private async Task<string> GetJSON(string apiPath)
+        private async Task<string> GetJSON(string route, Config.APITypes apiType)
         {
-            var requestUrl = config.RootURL + apiPath;
+            var apiRoot = "";
+            switch(apiType)
+            {
+                case Config.APITypes.Version1: apiRoot = "gravityformsapi/"; break;
+                case Config.APITypes.Version2Basic: apiRoot = ""; route = "wp-json/gf/v2/" + route; break;
+                case Config.APITypes.Version2OAuth1: apiRoot = ""; route = "wp-json/gf/v2/" + route; break;
+                case Config.APITypes.Version2OAuth2c: apiRoot = ""; route = "wp-json/gf/v2/" + route; break;
+            }
+            var requestUrl = config.RootURL + apiRoot + route;
 
             Log("Preparing web request");
 
@@ -161,17 +179,14 @@ namespace GravityFormsAdapter
 
             }
 
-            
-            if( true ) {
 
-                if( true)
-                {
-
+            switch (apiType)
+            {
+                case Config.APITypes.Version1:
                     Log("Preparing v1 credentials:");
                     string publicKey = config.ConsumerKey;
                     string privateKey = config.ConsumerSecret;
                     string method = "GET";
-                    string route = "forms";
                     string expires = GravityFormsV1Signer.UtcTimestamp(new TimeSpan(0, 1, 0)).ToString();
                     string stringToSign = string.Format("{0}:{1}:{2}:{3}", publicKey, method, route, expires);
 
@@ -184,9 +199,8 @@ namespace GravityFormsAdapter
                     Log("URL:" + signedURL);
 
                     req.RequestUri = new Uri(signedURL);
-                }    
-                else if (true)
-                {
+                    break;
+                case Config.APITypes.Version2Basic:
                     Log("Preparing Basic credentials");
 
                     // The below didn't work on the first try but the below does, so stick with the below..
@@ -197,13 +211,12 @@ namespace GravityFormsAdapter
                     req.Headers.Add("Authorization", "Basic " + authBasic);
 
                     req.RequestUri = new Uri(requestUrl);
-                }
-                else
-                {
+                    break;
+
+                case Config.APITypes.Version2OAuth1:
                     Log("Preparing OAuth credentials");
 
                     OAuth.OAuthRequest c = OAuth.OAuthRequest.ForRequestToken(config.ConsumerKey, config.ConsumerSecret);
-
                     c.RequestUrl = requestUrl;
                     var oAuthParams = c.GetAuthorizationQuery();
 
@@ -214,21 +227,14 @@ namespace GravityFormsAdapter
                     var authenticatedURL = requestUrl + "?" + oAuthParams;
                     Log(authenticatedURL);
 
-                    req.RequestUri = new Uri(requestUrl);
-
-                }
-            }
-            else
-            {
-                req.RequestUri = new Uri(requestUrl);
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", config.ConsumerKey + ":" + config.ConsumerSecret);
+                    req.RequestUri = new Uri(authenticatedURL);
+                    break;
             }
 
             //try
             {
 
-                Log("Downloading " + apiPath);
+                Log("Downloading " + route);
                 var result = await httpClient.SendAsync(req);
 
                 if (!result.IsSuccessStatusCode)
@@ -243,6 +249,7 @@ namespace GravityFormsAdapter
 
                 var jsonData = await result.Content.ReadAsStringAsync();
 
+                // For V1 compatibility remove the envelope: (Doesn't affect v2
                 jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "^\\{\"status\":200,\"response\":", "");
                 jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "\\}$", "");
 
@@ -276,6 +283,7 @@ namespace GravityFormsAdapter
             dgdForms.ItemsSource = null;
             var formDetails = new Dictionary<string, GravityDataStructures.GravityForm>();
 
+            var apiType = config.APIType;
             if (config.FetchForms)
             {
                 progressBar.Minimum = 0;
@@ -284,10 +292,9 @@ namespace GravityFormsAdapter
                 lblStatus.Content = "Filtering allowed form IDs";
                 var validForms = config.FormIDs.Split(',').Where(f => f.Length > 0).Select(f => f.Trim()).ToList();
 
-
                 progressBar.Value = 10;
                 lblStatus.Content = "Fetching form headers";
-                var formsJson = await GetJSON("forms");
+                var formsJson = await GetJSON("forms", apiType);
 
                 progressBar.Value = 20;
                 lblStatus.Content = "Parsing form headers";
@@ -298,7 +305,7 @@ namespace GravityFormsAdapter
                 lblStatus.Content = "Fetching form details";
                 foreach (var f in formHeaders.Where(frm => validForms.Count == 0 || validForms.Contains(frm.Key)))
                 {
-                    var formDetailJson = await GetJSON("forms/" + f.Value.id);
+                    var formDetailJson = await GetJSON("forms/" + f.Value.id, apiType);
 
                     lblStatus.Content = "Fetching form " + f.Value.id;
                     var formDetail = Newtonsoft.Json.JsonConvert.DeserializeObject<GravityDataStructures.GravityForm>(formDetailJson);
@@ -328,7 +335,7 @@ namespace GravityFormsAdapter
 
                 try
                 {
-                    var entryJSON = await GetJSON("entries/" + config.CurrentEntryID.ToString());
+                    var entryJSON = await GetJSON("entries/" + config.CurrentEntryID.ToString(), apiType);
                     var entryDictionary = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(entryJSON);
                     if( entryDictionary.ContainsKey("form_id" ) )
                     {

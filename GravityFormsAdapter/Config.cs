@@ -29,6 +29,15 @@ namespace GravityFormsAdapter
 
         [DataMember]
         public string RootURL { get; set; } = "https://example.com/wp-json/gf/v2/";
+        public enum APITypes
+        {
+            Version1,
+            Version2Basic,
+            Version2OAuth1,
+            Version2OAuth2c
+        }
+        [DataMember]
+        public APITypes APIType { get; set; } = APITypes.Version2OAuth1;
         [DataMember]
         public string ConsumerKey { get; set; } = "ck_12345";
         [DataMember]
