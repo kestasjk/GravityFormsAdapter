@@ -111,6 +111,13 @@ namespace GravityFormsAdapter
                     valueRec.entrySubKey = field.Value.Item2;
                     valueRec.entryValue = field.Value.Item3;
 
+                    if (valueRec.entryKey.Contains("Details"))
+                    {
+                        int a = 0;
+                        a++;
+
+                    }
+
                     db.tblGravityEntryValues.Add(valueRec);
                 }
 

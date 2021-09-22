@@ -98,7 +98,10 @@ namespace GravityFormsAdapter
             [DataMember]
             public string id { get; set; }
             [DataMember]
-            public string label { get; set; }
+            public string label
+            {
+                get; set;
+            }
             [DataMember]
             public string name { get; set; }
             public override string ToString()
@@ -192,7 +195,33 @@ namespace GravityFormsAdapter
                                     value = listVal.Select(l => (l?.ToString()) ?? "").Aggregate((a, b) => a + "," + b);
                                 else
                                     value = kvp.Value?.ToString();
+                                if(field.type == "list" ) //label.Contains("Partici") )
+                                {
+                                    var fluff = value;
+                                    int a = 0;
+                                    a++;
+                                    //kvp.Key = id 21
 
+                                    // field.description = ""
+                                    // field.id = "21"
+                                    //field.inputs = null
+                                    // field.label = "Course Participant Details"
+                                    // field.@type = "list"
+                                    // value = [{"First Name":"Blayde","Last Name":"Mager","Email":"blayde.mager@123456.wa.gov.au","Mobile":"1234567"}]
+
+                                    var entryDictionaries = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dictionary<string, string>>>(value);
+
+                                    int i = 101;
+                                    foreach (var entryDictionary in entryDictionaries)
+                                    {
+                                        foreach (var subKVP in entryDictionary)
+                                        {
+                                            var subField = new GravityField() { description = "", id = i.ToString(), inputs = null, label = subKVP.Key.ToString(), type = "string" };
+                                            formValues.Add(i.ToString(), new Tuple<GravityField, string, string>(subField, i.ToString(), subKVP.Value));
+                                            i++;
+                                        }
+                                    }
+                                }
                                 if (formValues.ContainsKey(kvp.Key))
                                     throw new Exception(kvp.Key + " already exists");
                                 else
