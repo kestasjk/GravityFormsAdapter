@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -124,6 +125,29 @@ namespace GravityFormsAdapter
                 db.tblGravityEntries.Add(entryRec);
 
                 db.SaveChanges();
+            }
+        }
+        internal static int WriteNewLog()
+        {
+            using (var db = new GravityFormsSQLEntities())
+            {
+                db.Database.ExecuteSqlCommand("INSERT INTO tblGravityFormLogs (isSuccess) VALUES (0)");
+                var res = db.Database.SqlQuery<int>("SELECT MAX(id) FROM tblGravityFormLogs");
+                return res.First();
+            }
+        }
+        internal static void SaveErrorLog(int id, string message)
+        {
+            using (var db = new GravityFormsSQLEntities())
+            {
+                db.Database.ExecuteSqlCommand("UPDATE tblGravityFormLogs SET errorMessage = @message, endTime = GETDATE() WHERE id = " + id.ToString(), new SqlParameter("@message",message));
+            }
+        }
+        internal static void SaveSuccessLog(int id, int newFormCount)
+        {
+            using (var db = new GravityFormsSQLEntities())
+            {
+                db.Database.ExecuteSqlCommand("UPDATE tblGravityFormLogs SET isSuccess = 1, endTime = GETDATE(), newFormCount = " + newFormCount.ToString() + " WHERE id = " + id.ToString());
             }
         }
     }

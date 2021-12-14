@@ -58,6 +58,17 @@
           <Property Name="label" Type="nvarchar(max)" Nullable="false" />
           <Property Name="description" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
+        <EntityType Name="tblGravityFormLogs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="startTime" Type="datetime" Nullable="false" />
+          <Property Name="endTime" Type="datetime" />
+          <Property Name="isSuccess" Type="int" Nullable="false" />
+          <Property Name="errorMessage" Type="nvarchar(max)" />
+          <Property Name="newFormCount" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="tblGravityForms">
           <Key>
             <PropertyRef Name="id" />
@@ -71,6 +82,7 @@
           <EntitySet Name="tblGravityEntryValues" EntityType="Self.tblGravityEntryValues" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblGravityFieldInputs" EntityType="Self.tblGravityFieldInputs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblGravityFields" EntityType="Self.tblGravityFields" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tblGravityFormLogs" EntityType="Self.tblGravityFormLogs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tblGravityForms" EntityType="Self.tblGravityForms" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -124,6 +136,7 @@
           <EntitySet Name="tblGravityForms" EntityType="Self.tblGravityForm" />
           <EntitySet Name="tblGravityFieldInputs" EntityType="GravityFormsAdapter.tblGravityFieldInput" />
           <EntitySet Name="tblGravityFields" EntityType="GravityFormsAdapter.tblGravityField" />
+          <EntitySet Name="tblGravityFormLogs" EntityType="GravityFormsAdapter.tblGravityFormLog" />
         </EntityContainer>
         <EntityType Name="tblGravityFieldInput">
           <Key>
@@ -144,6 +157,17 @@
           <Property Name="type" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="label" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblGravityFormLog">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="startTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="endTime" Type="DateTime" Precision="3" />
+          <Property Name="isSuccess" Type="Int32" Nullable="false" />
+          <Property Name="errorMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="newFormCount" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -213,6 +237,18 @@
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="field_id" ColumnName="field_id" />
                 <ScalarProperty Name="form_id" ColumnName="form_id" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblGravityFormLogs">
+            <EntityTypeMapping TypeName="GravityFormsAdapter.tblGravityFormLog">
+              <MappingFragment StoreEntitySet="tblGravityFormLogs">
+                <ScalarProperty Name="newFormCount" ColumnName="newFormCount" />
+                <ScalarProperty Name="errorMessage" ColumnName="errorMessage" />
+                <ScalarProperty Name="isSuccess" ColumnName="isSuccess" />
+                <ScalarProperty Name="endTime" ColumnName="endTime" />
+                <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>

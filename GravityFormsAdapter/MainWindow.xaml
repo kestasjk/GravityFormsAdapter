@@ -12,7 +12,7 @@
             <ColumnDefinition Width="397*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="100"/>
             <RowDefinition Height="157*"/>
             <RowDefinition Height="162*"/>
             <RowDefinition Height="30"/>
@@ -32,27 +32,28 @@
             <Label Content="URL:" HorizontalAlignment="Left" Width="46" Grid.Column="1"  VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26" Margin="0,6,0,7"/>
             <TextBox x:Name="txtKey" Margin="51,13,10,11" Grid.Row="1" TextWrapping="Wrap" Text="" Grid.Column="1"  VerticalAlignment="Center" Height="17"/>
             <Label Content="Key:" HorizontalAlignment="Left" Margin="0,9,0,6" Grid.Row="1" Width="46" Grid.Column="1"  VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
-            <TextBox  x:Name="txtSecret" Margin="59,13,345,11" TextWrapping="Wrap" Text="" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Height="17"/>
+            <TextBox  x:Name="txtSecret" Margin="59,13,386,11" TextWrapping="Wrap" Text="" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Height="17"/>
             <Label Content="Secret:" HorizontalAlignment="Left" Width="54" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26" Margin="0,7,0,8"/>
-            <TextBox x:Name="txtFormIDs" HorizontalAlignment="Right" Margin="0,11,182,13" Grid.Row="1" TextWrapping="Wrap" Text="" Width="88" Grid.Column="2" VerticalAlignment="Center" Height="17"/>
-            <Label Content="Form IDs:" HorizontalAlignment="Right" Margin="0,9,275,6" Width="70" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
-            <TextBox  x:Name="txtCurrentEntryID" HorizontalAlignment="Right" Margin="0,11,182,11" TextWrapping="Wrap" Text="" Width="88" Grid.Column="2" VerticalAlignment="Center" Height="17"/>
-            <Label Content="Next Entry ID:" HorizontalAlignment="Right" Margin="0,6,275,7" Width="92" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
+            <TextBox x:Name="txtFormIDs" HorizontalAlignment="Right" Margin="0,10,202,14" Grid.Row="1" TextWrapping="Wrap" Text="" Width="88" Grid.Column="2" VerticalAlignment="Center" Height="17"/>
+            <Label Content="Form IDs:" HorizontalAlignment="Right" Margin="0,9,295,6" Width="65" Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
+            <TextBox  x:Name="txtCurrentEntryID" HorizontalAlignment="Right" Margin="0,11,202,11" TextWrapping="Wrap" Text="" Width="88" Grid.Column="2" VerticalAlignment="Center" Height="17"/>
+            <Label Content="Next Entry ID:" HorizontalAlignment="Right" Margin="0,6,295,7" Width="86" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
             <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Right" Margin="0,8,10,8" Width="75" Grid.Column="2" Click="btnSave_Click"/>
             <Button x:Name="btnLoad" Content="Load" HorizontalAlignment="Right" Margin="0,8,10,8" Grid.Row="1" Width="75" Grid.Column="2" Click="btnLoad_Click"/>
-            <UniformGrid Columns="1" Grid.Column="2" Margin="0,0,85,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="92">
+            <UniformGrid Columns="1" Grid.Column="2" Margin="0,0,85,0" Grid.RowSpan="2" HorizontalAlignment="Right" Width="112">
                 <CheckBox x:Name="chkIgnoreSSL" Content="Ignore SSL"  VerticalContentAlignment="Center" />
                 <CheckBox x:Name="chkAutoRun" Content="Auto-run" VerticalContentAlignment="Center"/>
                 <CheckBox x:Name="chkFetchForms" Content="Fetch forms" VerticalContentAlignment="Center"/>
                 <CheckBox x:Name="chkSaveToSQL" Content="Save to SQL" VerticalContentAlignment="Center"/>
+                <CheckBox x:Name="chkSaveLogsToSQL" Content="Save logs to SQL" VerticalContentAlignment="Center"/>
             </UniformGrid>
-            <ComboBox HorizontalAlignment="Right" Margin="0,9,357,7" Width="88" Grid.Column="2" VerticalAlignment="Center" Height="23" >
+            <ComboBox HorizontalAlignment="Right" Margin="0,9,386,7" Width="88" Grid.Column="2" VerticalAlignment="Center" Height="23" >
                 <ComboBoxItem Name="cboOptionVersion1" Content="Version 1"/>
                 <ComboBoxItem Name="cboOptionVersion2Basic" Content="Version 2 Basic" />
                 <ComboBoxItem Name="cboOptionVersion2OAuth1" Content="Version 2 OAuth 1" />
                 <!--<ComboBoxItem Name="cboOptionVersion2OAuth2" Content="Version 2 OAuth 2" />-->
             </ComboBox>
-            <Label Content="API Type:" HorizontalAlignment="Right" Margin="0,7,450,6" Width="92" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
+            <Label Content="API Type:" HorizontalAlignment="Right" Margin="0,7,479,6" Width="63" Grid.Column="2" VerticalAlignment="Center" HorizontalContentAlignment="Right" Height="26"/>
 
         </Grid>
 

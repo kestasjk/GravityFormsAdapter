@@ -58,6 +58,9 @@ namespace GravityFormsAdapter
         [DataMember]
         // Comma seperated form IDs to download
         public string FormIDs { get; set; } = "";
+        [DataMember]
+        // If this is enabled the app will write logs to an SQL table tblGravityFormLogs
+        public bool WriteSQLLogs { get; set; } = false;
         public void Save()
         {
             var folder = GetEXEFolder();

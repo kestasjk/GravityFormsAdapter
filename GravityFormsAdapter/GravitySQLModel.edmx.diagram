@@ -10,6 +10,7 @@
         <EntityTypeShape EntityType="GravityFormsAdapter.tblGravityForm" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="GravityFormsAdapter.tblGravityFieldInput" Width="1.5" PointX="5" PointY="0.625" />
         <EntityTypeShape EntityType="GravityFormsAdapter.tblGravityField" Width="1.5" PointX="2.75" PointY="3.375" />
+        <EntityTypeShape EntityType="GravityFormsAdapter.tblGravityFormLog" Width="1.5" PointX="0.75" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

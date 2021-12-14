@@ -115,6 +115,9 @@
     <Compile Include="tblGravityForm.cs">
       <DependentUpon>GravitySQLModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="tblGravityFormLog.cs">
+      <DependentUpon>GravitySQLModel.tt</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -34,7 +34,8 @@ namespace GravityFormsAdapter
         internal List<GravityDataStructures.GravityForm> Forms = new List<GravityDataStructures.GravityForm>();
         internal List<GravityDataStructures.GravityEntry> Entries = new List<GravityDataStructures.GravityEntry>();
 
-        private static Config config = new Config();
+        internal static Config config = new Config();
+        internal static int sqlLogID = 0; // If non-zero this is the ID of the log entry for this instance
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -66,6 +67,7 @@ namespace GravityFormsAdapter
             txtFormIDs.Text = config.FormIDs;
             txtCurrentEntryID.Text = config.CurrentEntryID.ToString();
             chkAutoRun.IsChecked = (config.AutomaticMode);
+            chkSaveLogsToSQL.IsChecked = (config.WriteSQLLogs);
             chkIgnoreSSL.IsChecked = (config.IgnoreCertificateErrors);
             chkFetchForms.IsChecked = (config.FetchForms);
             chkSaveToSQL.IsChecked = (config.SaveToSQL);
@@ -84,6 +86,7 @@ namespace GravityFormsAdapter
             config.ConsumerKey = txtKey.Text;
             config.ConsumerSecret = txtSecret.Text;
             config.FormIDs = txtFormIDs.Text;
+            config.WriteSQLLogs = chkSaveLogsToSQL.IsChecked ?? false;
             config.AutomaticMode = chkAutoRun.IsChecked ?? false;
             config.IgnoreCertificateErrors = chkIgnoreSSL.IsChecked ?? false;
             config.SaveToSQL = chkSaveToSQL.IsChecked ?? false;
@@ -283,6 +286,12 @@ namespace GravityFormsAdapter
             {
                 throw new Exception("The current entry ID is less than 1, but it starts at 1");
             }
+
+            if( config.WriteSQLLogs )
+            {
+                sqlLogID = SQLServer.WriteNewLog();
+            }
+
             dgdForms.ItemsSource = null;
             var formDetails = new Dictionary<string, GravityDataStructures.GravityForm>();
 
@@ -329,6 +338,9 @@ namespace GravityFormsAdapter
             dgdEntries.ItemsSource = null;
             dgdEntries.ItemsSource = newEntries;
             var done = false;
+
+            var isSuccess = true;
+            string errorMessage = null;
             do
             {
                 dgdEntries.ItemsSource = null;
@@ -363,6 +375,8 @@ namespace GravityFormsAdapter
                 {
                     Log("Error retrieving new entry: " + ex.Message);
                     lblStatus.Content = "Error fetching: " + ex.Message;
+                    isSuccess = false;
+                    errorMessage = ex.Message;
                     done = true;
                 }
                 
@@ -384,6 +398,14 @@ namespace GravityFormsAdapter
                 SaveEntriesToSQL(newEntries);
 
                 if (config.FetchForms) SaveFormsToSQL(formDetails.Values.ToList());
+            }
+
+            if (config.WriteSQLLogs)
+            {
+                if( isSuccess )
+                    SQLServer.SaveSuccessLog(sqlLogID, newEntries.Count);
+                else
+                    SQLServer.SaveErrorLog(sqlLogID, errorMessage);
             }
 
             // Save directly, then reload the config to the screen to refresh the current entry ID

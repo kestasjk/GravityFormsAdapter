@@ -30,5 +30,6 @@ namespace GravityFormsAdapter
         public virtual DbSet<tblGravityForm> tblGravityForms { get; set; }
         public virtual DbSet<tblGravityFieldInput> tblGravityFieldInputs { get; set; }
         public virtual DbSet<tblGravityField> tblGravityFields { get; set; }
+        public virtual DbSet<tblGravityFormLog> tblGravityFormLogs { get; set; }
     }
 }
