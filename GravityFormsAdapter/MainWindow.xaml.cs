@@ -249,9 +249,12 @@ namespace GravityFormsAdapter
 
                 var jsonData = await result.Content.ReadAsStringAsync();
 
-                // For V1 compatibility remove the envelope: (Doesn't affect v2
-                jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "^\\{\"status\":200,\"response\":", "");
-                jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "\\}$", "");
+                if( apiType == Config.APITypes.Version1)
+                {
+                    // For V1 compatibility remove the envelope:
+                    jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "^\\{\"status\":200,\"response\":", "");
+                    jsonData = System.Text.RegularExpressions.Regex.Replace(jsonData, "\\}$", "");
+                }
 
                 return jsonData;
                 Log("Downloaded");
